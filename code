@@ -1,0 +1,88 @@
+def display_menu():
+    print("\nEnter your order:")
+    print("'1' for Milktea")
+    print("'2' for Burger")
+    print("'3' for Fries")
+    print("'4' for Fishball")
+    print("'5' for Hotdog Sandwich")
+    print("'c' to confirm order")
+    print("'n' to end order")
+
+def get_order(orders, prices):
+    while True:
+        display_menu()
+        choice = input("\nEnter your order: ").lower()
+
+        if choice == 'n':  # End the order process
+            print("\nOrder ended.")
+            break
+        elif choice == 'c':  # Confirm the order
+            print("\nConfirming your order...")
+            display_orders(orders)
+            total_price = calculate_total(orders, prices)
+            print(f"\nTotal Price: ₱{total_price}")
+            process_payment(total_price)
+            break
+        elif choice in ['1', '2', '3', '4', '5']:
+            quantity = int(input("How many? "))
+            menu_items = {
+                '1': 'Milktea',
+                '2': 'Burger',
+                '3': 'Fries',
+                '4': 'Fishball',
+                '5': 'Hotdog Sandwich'
+            }
+            item = menu_items[choice]
+
+            if item in orders:
+                orders[item] += quantity  # Add quantity to the existing order
+            else:
+                orders[item] = quantity  # New order item added
+
+            print(f"\nYour current orders: ")
+            display_orders(orders)  # Show current orders after adding the item
+        else:
+            print("\nInvalid input. Please try again.")
+
+def display_orders(orders):
+    if not orders:
+        print("\nNo items in your order.")
+    else:
+        print("\nYour orders:")
+        for item, quantity in orders.items():
+            print(f"{item}: {quantity}")
+
+def calculate_total(orders, prices):
+    total = 0
+    for item, quantity in orders.items():
+        total += prices[item] * quantity
+    return total
+
+def process_payment(total_price):
+    while True:
+        try:
+            cash = float(input("\nEnter the amount of cash: ₱"))
+            if cash < total_price:
+                print("Insufficient cash. Please try again.")
+            else:
+                change = cash - total_price
+                print(f"Payment accepted. Your change is ₱{change:.2f}.")
+                break
+        except ValueError:
+            print("Invalid input. Please enter a valid amount.")
+
+def main():
+    # Prices for the menu items
+    prices = {
+        'Milktea': 80,
+        'Burger': 50,
+        'Fries': 40,
+        'Fishball': 20,
+        'Hotdog Sandwich': 30
+    }
+    
+    orders = {}
+    get_order(orders, prices)
+
+if __name__ == "__main__":
+    main()
